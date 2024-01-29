@@ -1068,6 +1068,7 @@ class StableDiffusionPipeline(
         self,
         prompt_1: str = None,
         prompt_2: str = None,
+        switch_step: int = 10,
         height: Optional[int] = None,
         width: Optional[int] = None,
         num_inference_steps: int = 50,
@@ -1309,7 +1310,7 @@ class StableDiffusionPipeline(
                 latent_model_input = torch.cat([latents] * 2) if self.do_classifier_free_guidance else latents
                 latent_model_input = self.scheduler.scale_model_input(latent_model_input, t)
 
-                text_embeds = prompt_embeds_1 if i < 8 else prompt_embeds_2
+                text_embeds = prompt_embeds_1 if i < switch_step else prompt_embeds_2
 
                 # predict the noise residual
                 noise_pred = self.unet(
